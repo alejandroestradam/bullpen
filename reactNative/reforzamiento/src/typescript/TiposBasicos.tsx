@@ -1,5 +1,8 @@
+import { useState } from "react";
 
 const TiposBasicos = () => {
+
+  const [state, setState] = useState();
 
   const nombre: string = "Fernando";
   const edad = 35;
