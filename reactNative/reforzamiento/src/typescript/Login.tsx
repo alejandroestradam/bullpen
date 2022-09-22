@@ -7,6 +7,10 @@ interface AuthState {
     username: string,
     nombre: string
 }
+interface LoginPayload {
+    username: string,
+    nombre: string
+}
 
 const initialState: AuthState = {
     validando: true,
@@ -15,7 +19,9 @@ const initialState: AuthState = {
     nombre: ''
 }
 
-type AuthAction = {type: 'logout'};
+type AuthAction = 
+ | {type: 'logout'}
+ | {type: 'login', payload: LoginPayload};
 
 const authReducer = (state: AuthState, action: AuthAction): AuthState =>{
     switch (action.type) {
@@ -26,7 +32,14 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState =>{
                 nombre: '',
                 username: ''
             }
-    
+        case 'login':
+            const {nombre, username} = action.payload;
+            return{
+                validando: false,
+                token: 'ABCD123',
+                nombre: action.payload.nombre,
+                username: action.payload.username
+            }
         default:
             return state;
     }
@@ -41,6 +54,21 @@ const Login = () => {
             dispatch({type:'logout'});
         },1500)
     },[])
+
+    const login = () =>{
+        dispatch({
+            type: 'login',
+            payload: {
+                nombre: 'Alejandro',
+                username: 'Strider'
+            }
+        })
+    }
+    const logout = () =>{
+        dispatch({
+            type: 'logout'
+        })
+    }
 
     if(state.validando){
         return(
@@ -60,9 +88,18 @@ const Login = () => {
         &nbsp;
         &nbsp;
         <h3>Login</h3>
-        <div className="alert alert-danger">No autenticado</div>
-        <div className="alert alert-success">Autenticado</div>
-        <div className="btn btn-primary">Login</div>
+        {
+            state.token 
+            ? <div>
+                <div className="alert alert-success">Autenticado como {state.nombre}</div>
+                <button className="btn btn-danger" onClick={logout}>Logout</button>
+              </div>
+            : <div> 
+                <div className="alert alert-danger">No autenticado</div>
+                <button className="btn btn-primary" onClick={login}>Login</button>
+              </div>
+        }
+        
     </div>
   )
 }
