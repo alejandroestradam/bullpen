@@ -1,5 +1,6 @@
 import Contador from "./typescript/Contador";
 import ContadorConHook from "./typescript/ContadorConHook";
+import Formularios from "./typescript/Formularios";
 import Funciones from "./typescript/Funciones";
 import Login from "./typescript/Login";
 import TiposBasicos from "./typescript/TiposBasicos";
@@ -12,13 +13,14 @@ const App = () => {
     <div className="mt-2">
       <h1>Introduccion a TypeScript</h1>
       <hr/>
-      <TiposBasicos/>
+      {/*<TiposBasicos/>
       <TIposLiterales/>
       <Funciones/>
       <Contador/>
       <ContadorConHook/>
       <Login/>
-      <Usuarios/>
+      <Usuarios/>*/}
+      <Formularios/>
     </div>
   )
 }
