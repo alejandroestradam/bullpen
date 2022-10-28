@@ -70,7 +70,6 @@ const useCalculadora = () => {
         switch(ultimaOperacion.current){
             case Operadores.sumar:
                 setNumero(`${num + numAnterior}`);
-                console.log(num + numAnterior);
                 break;
             case Operadores.restar:
                 setNumero(`${numAnterior - num}`);
