@@ -1,30 +1,43 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-class Test extends Component {
-    constructor(props) {
-        super(props);
-        this.a = {
-            count: 0
-        };
-        this.handleChange = this.handleChange.bind(this);
-    }
+const OPERATIONS = {
+    ADD: "ADD",
+    SUBTRACT: "SUBTRACT"
+  };
 
-    handleChange(e){
-        
-    }
-
-    
-
-    render() {
-        return (
-            <div>
-                <input type="text" />
-                <input type="text" />
-                <button onClick={()=>this.seta({count: this.a.count + 1})}>Sumar</button>
-                <p>{this.a.count}</p>
-            </div>
-        )
-    }
+const Test = () => {
+    const [number, updateNumber] = React.useState(0);
+    const [state, dispatch] = React.useReducer((state, action) => {
+        switch (action.type) {
+            case "ADD":
+                console.log(state);
+                return state + number;
+            case "SUBTRACT":
+                console.log(state);
+                return state - number;
+          default:
+            return state;
+        }
+    }, 0);
+  
+    /* implement dispatches */
+    const add = () => dispatch({type: 'ADD'});
+    const subtract = () => dispatch({type: 'SUBTRACT'});
+  
+    const handleNumberChange = e => updateNumber(Number(e.target.value));
+  
+    return (
+      <div>
+        <div id="result">{state}</div>
+        <div>
+          <button id="add" onClick={add}>Add</button>
+          <button id="subtract" onClick={subtract}>Subtract</button>
+        </div>
+        <div>
+          <input type="text" value={number} onChange={handleNumberChange} />
+        </div>
+      </div>
+    );
 }
 
-export default Test;
+export default Test
