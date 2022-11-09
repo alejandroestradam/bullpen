@@ -13,13 +13,13 @@ const App = () => {
     <div className="mt-2">
       <h1>Introduccion a TypeScript</h1>
       <hr/>
-      {/*<TiposBasicos/>
+      <TiposBasicos/>
       <TIposLiterales/>
       <Funciones/>
       <Contador/>
       <ContadorConHook/>
       <Login/>
-      <Usuarios/>*/}
+      <Usuarios/>
       <Formularios/>
     </div>
   )
