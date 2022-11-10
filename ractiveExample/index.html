@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Ractive example</title>
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
+</head>
+<body>
+    <div class="container">
+        <div id="app"></div>
+    </div>
+<!-- The template for the ractive component. -->
+    <script id='template' type='text/ractive'>
+            <h1 style="color: {{color}}">{{greeting}}, my name is {{name}}</h1>
+            {{#if showAddress}}
+                <ul>
+                    {{#address}}
+                    <li>{{street}}</li>
+                    <li>{{city}}</li>
+                    <li>{{state}}</li>
+                    {{/address}}
+                </ul>
+                {{else}}
+                <p>Address hidden</p>
+            {{/if}}
+            <button on-click="showAddress">
+                {{#if showAddress}}
+                    Hide Address
+                {{else}}
+                    Show Address
+                {{/if}}
+            </button>   
+            <ul>
+                {{#friends}}
+                <li>{{name}} - {{age}}</li>
+                {{/friends}}
+            </ul>
+
+            <!-- A component. -->
+            <jobs/>
+
+    </script>
+
+<!-- Job component -->
+    <script id="jobs" type="text/ractive">
+        <h3>Work history</h3>
+        <table class='table'>
+            <tr>
+                <th>ID</th>
+                <th>Company</th>
+                <th>Job Title</th>
+                <th>Years</th>
+            </tr>
+            {{#each jobs: i}}
+                <tr>
+                    <td>{{i}}</td>
+                    <td>{{company}}</td>
+                    <td>{{title}}</td>
+                    <td>{{years}}</td>
+                </tr>
+            {{/each}}
+        </table>
+
+        <h5>Add Job</h5>
+        <form on-submit="@this.addJob()">
+            <div class="form-group">
+                <input class="form-control" type="text" placeholder="Add Company" value={{jobCompany}}>
+            </div>
+            <br/>
+            <div class="form-group">
+                <input class="form-control" type="text" placeholder="Add Title" value={{jobTitle}}>
+            </div>
+            <br/>
+            <div class="form-group">
+                <input class="form-control" type="text" placeholder="Add Years" value={{jobYears}}>
+            </div>
+            
+            <input class="btn btn-default" type="submit" value="Submit">
+        </form>
+
+    </script>
+
+    <!-- Loading the ractive library. -->
+    <script src="https://cdn.jsdelivr.net/npm/ractive"></script>
+
+    <script>
+    // Creating the Job component. 
+        var Jobs = Ractive.extend({
+            template: '#jobs',
+            isolated: true,
+            oninit: function(){
+            },
+            addJob: function(){
+                //this.on('addJob',function(){
+                    var newJob = {
+                        company: this.get('jobCompany'),
+                        title: this.get('jobTitle'),
+                        years: this.get('jobYears')
+                    }
+                    this.push('jobs', newJob);
+
+                    this.set('jobCompany', '');
+                    this.set('jobTitle', '');
+                    this.set('jobYears', '');
+                //});
+                return false;
+            },
+            data: function () {
+                return {
+                jobs: [                    {
+                        company: 'Femsa',
+                        title: 'Web Developer',
+                        years: 1
+                    },
+                    {
+                        company: 'Apple',
+                        title: 'Sr Web Developer',
+                        years: 2
+                    },
+                    {
+                        company: 'Microsoft',
+                        title: 'Sr data analysis',
+                        years: 3
+                    },
+                    {
+                        company: 'CEMEX',
+                        title: 'Albañil',
+                        years: 4
+                    }
+                ],
+                newJob: {
+                        jobCompany: '',
+                        jobTitle: '',
+                        jobYears: ''
+                    }
+                };
+            }
+        });
+
+        var ractive = new Ractive({
+            el: '#app',
+            template: '#template',
+            components: {jobs: Jobs},
+            addJob: function(){
+                ractive.push('jobs',{
+                    company: 'Microsoft',
+                    title: 'Sr data analysis',
+                    years: 1
+                });
+            },
+            data:{
+                greeting: 'Hello World',
+                name: 'Alex',
+                color: 'red',
+                address: {
+                    street: 'Av americas',
+                    city: 'Zapopan',
+                    state: 'Jalisco'
+                },
+                friends: [
+                    {name: 'John', age: 25},
+                    {name: 'Juan', age: 22},
+                    {name: 'Jony', age: 23},
+                ],
+                showAddress: false
+            }
+        })
+        ractive.set('color','green');
+        ractive.set('friends.2.isBest',true);
+
+        ractive.on('showAddress', function(){
+            ractive.toggle('showAddress');
+        });
+
+// Observing the name variable and when it changes it will log the keypath and the new value.
+        ractive.observe('friends.*', function(newValue, oldValue, keypath){
+            if(newValue.isBest){
+                console.log(newValue.name + 'is my best friend');
+            }
+        })
+
+        console.log(ractive.get('name'));
+
+    </script>
+</body>
+</html>
